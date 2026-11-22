@@ -1,0 +1,15 @@
+.gradle/
+.gradle-home/
+.tools/
+build/
+run/
+out/
+.idea/
+*.iml
+*.ipr
+*.iws
+.research/
+run-server/
+*.log
+dist/
+.DS_Store

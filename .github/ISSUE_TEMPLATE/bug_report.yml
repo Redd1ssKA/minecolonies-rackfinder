@@ -1,0 +1,47 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report! Please fill in as much as you can — versions and the log are the most
+        important parts.
+  - type: input
+    id: mod-version
+    attributes:
+      label: Rack Finder version
+      placeholder: "1.0.0 (file name of the jar)"
+    validations:
+      required: true
+  - type: input
+    id: forge
+    attributes:
+      label: Minecraft / Forge version
+      placeholder: "1.20.1 / 47.4.10"
+    validations:
+      required: true
+  - type: input
+    id: minecolonies
+    attributes:
+      label: MineColonies version
+      placeholder: "1.20.1-1.1.1278"
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: dump
+    attributes:
+      label: Output of /rackfinder dump
+      description: Run it in-game and paste the chat output.
+      render: text
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log
+      description: Attach or paste `logs/latest.log` (a link to a gist is fine).
+      render: text

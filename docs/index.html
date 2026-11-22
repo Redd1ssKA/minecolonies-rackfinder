@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rack Finder — client-side container search for Forge 1.20.1</title>
+<meta name="description" content="Client-side item search across MineColonies racks and vanilla containers. Press R, find every container with the item, highlighted through walls. Forge 1.20.1, no server installation.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MineColonies Rack Finder">
+<meta property="og:description" content="Client-side item search across MineColonies racks and vanilla containers, highlighted through walls. Forge 1.20.1, no server installation.">
+<meta property="og:image" content="banner.png">
+<link rel="icon" href="icon.png" type="image/png">
+<style>
+  :root {
+    --bg: #0d1114;
+    --panel: #151b20;
+    --panel-2: #1b232a;
+    --line: #28323a;
+    --text: #ecf1f5;
+    --muted: #8a96a0;
+    --cyan: #33d6ff;
+    --gold: #ffc400;
+    --green: #7cb342;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 85% -10%, #12333d 0%, var(--bg) 55%) no-repeat, var(--bg);
+    color: var(--text);
+    font: 16px/1.6 "Segoe UI", system-ui, -apple-system, "DejaVu Sans", sans-serif;
+  }
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 28px 0 8px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { width: 44px; height: 44px; border-radius: 10px; }
+  .brand span { font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-size: 13px; }
+
+  .hero { padding: 34px 0 10px; }
+  .hero h1 { font-size: clamp(34px, 6vw, 60px); line-height: 1.05; margin: 0 0 14px; letter-spacing: -.02em; }
+  .hero p.lead { font-size: clamp(17px, 2.2vw, 21px); color: var(--muted); max-width: 760px; margin: 0 0 22px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .badge { border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 13px; padding: 4px 11px; border-radius: 999px; }
+  .badge.cyan { color: var(--cyan); border-color: #1d5a6b; background: #10262d; }
+  .badge.gold { color: var(--gold); border-color: #5a4a12; background: #241f0d; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-block; padding: 11px 20px; border-radius: 9px; font-weight: 600; border: 1px solid var(--line); background: var(--panel); color: var(--text); }
+  .btn:hover { text-decoration: none; border-color: #3d4b55; }
+  .btn.primary { background: #0f3a46; border-color: #1f6b80; color: var(--cyan); }
+  .btn.primary:hover { background: #124453; }
+
+  .banner { margin: 30px 0 10px; }
+  .banner img { width: 100%; border-radius: 14px; border: 1px solid var(--line); display: block; }
+
+  section { padding: 34px 0; border-top: 1px solid var(--line); margin-top: 34px; }
+  h2 { font-size: 24px; margin: 0 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 22px; }
+
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .card h3 { margin: 0 0 6px; font-size: 16px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+  .card .k { color: var(--cyan); font-weight: 700; }
+
+  .steps { counter-reset: step; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .step { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 18px 58px; position: relative; }
+  .step::before { counter-increment: step; content: counter(step); position: absolute; left: 18px; top: 16px; width: 26px; height: 26px; border-radius: 50%; background: #10303a; color: var(--cyan); font-weight: 700; font-size: 14px; display: grid; place-items: center; border: 1px solid #1f6b80; }
+  .step p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  .shot { display: grid; gap: 10px; }
+  .shot img { width: 100%; border-radius: 12px; border: 1px solid var(--line); display: block; }
+  .caption { color: var(--muted); font-size: 13px; }
+
+  pre { background: #0b1013; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 14px; }
+  code { font-family: "JetBrains Mono", "Cascadia Code", ui-monospace, monospace; }
+  p code, li code, td code { background: #101619; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; font-size: 13.5px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  td:first-child { white-space: nowrap; color: var(--text); }
+
+  ul.limits { color: var(--muted); margin: 0; padding-left: 20px; }
+  ol.install { margin: 0; padding-left: 22px; color: var(--muted); }
+  ol.install li { margin: 8px 0; }
+  ol.install li strong, ol.install li code { color: var(--text); }
+  ul.limits li { margin: 6px 0; }
+
+  footer { padding: 26px 0 50px; color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--line); margin-top: 40px; }
+  footer p { margin: 6px 0; }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="brand">
+    <img src="icon.png" alt="Rack Finder icon">
+    <span>Racks &amp; containers · Forge 1.20.1</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <h1>Rack Finder</h1>
+    <p class="lead">Stop opening every chest and rack. Press <strong>R</strong>, type an item name, and every
+      container that stores it — MineColonies racks, vanilla chests, barrels, shulkers — is outlined
+      <strong>through walls</strong> with its coordinates and distance.</p>
+    <div class="badges">
+      <span class="badge">Minecraft 1.20.1</span>
+      <span class="badge">Forge 47.x</span>
+      <span class="badge cyan">client-side only</span>
+      <span class="badge gold">no server mod</span>
+      <span class="badge">MIT license</span>
+    </div>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/Redd1ssKA/minecolonies-rackfinder/releases/latest">Download jar</a>
+      <a class="btn" href="https://github.com/Redd1ssKA/minecolonies-rackfinder">Source on GitHub</a>
+      <a class="btn" href="https://github.com/Redd1ssKA/minecolonies-rackfinder/blob/main/README.ru.md">По-русски</a>
+    </div>
+  </div>
+
+  <div class="banner"><img src="banner.png" alt="Rack Finder banner"></div>
+
+  <section>
+    <h2>What it does</h2>
+    <p class="sub">Built for warehouse colonies where a single item can live in a dozen racks.</p>
+    <div class="grid">
+      <div class="card"><h3>Search by item</h3><p>Type a name or a registry id, walk the list with <code>Up</code>/<code>Down</code>, confirm with <code>Enter</code>. Every container holding that item is listed with the exact amount, and the right-hand list scrolls when there are more results than fit.</p></div>
+      <div class="card"><h3>Highlight through walls</h3><p>Screen-space outlines ignore terrain. The nearest rack is golden, the rest cyan.</p></div>
+      <div class="card"><h3>Coordinates &amp; distance</h3><p>Each result shows <code>X / Y / Z</code>, distance in blocks (or another dimension) and warehouse/double flags.</p></div>
+      <div class="card"><h3>Live outline</h3><p>Open a chest that holds the searched item and it joins the highlight right away — no need to search again. Close-by containers are clipped instead of vanishing.</p></div>
+      <div class="card"><h3>Vanilla storage</h3><p>Chests, trapped chests, barrels, shulker boxes, hoppers, droppers, dispensers, furnaces and brewing stands. Vanilla hides their contents from clients, so a container is remembered the first time you open it.</p></div>
+      <div class="card"><h3>Works on any server</h3><p>No server installation, no packets of its own. Servers and other players never see the mod.</p></div>
+      <div class="card"><h3>Slot frames</h3><p>Pick an item and matching slots are framed in green inside the rack window (and any container), so the stack itself is easy to spot.</p></div>
+      <div class="card"><h3>Remembers your query</h3><p>The last search text comes back when you reopen the window, and the small "x" clears the field. The highlight is applied only when you confirm an item.</p></div>
+      <div class="card"><h3>Remembers everything</h3><p>The index is saved to disk per world, so racks in unloaded chunks stay searchable.</p></div>
+      <div class="card"><h3>Live HUD</h3><p>A small corner list keeps the nearest matches visible while the highlight is active.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <p class="sub">Everything comes from data the client already has — that is why no server component is required.</p>
+    <div class="steps">
+      <div class="step"><h3>Chunk packets</h3><p>Loaded chunks arrive with the NBT of their block entities. MineColonies' rack saves its full inventory there (<code>inventory</code>, <code>empty</code>, <code>inWarehouse</code>), so the mod can read it directly.</p></div>
+      <div class="step"><h3>Opened racks</h3><p>When you open a rack, the server sends the fresh slot contents; the mod records the snapshot and refreshes its entry.</p></div>
+      <div class="step"><h3>Local index</h3><p>Item → racks is kept in memory and stored in <code>config/rackfinder/racks-&lt;world&gt;.json</code>. Searching is instant and works offline.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Interface</h2>
+    <div class="shot">
+      <img src="screenshot-search.png" alt="Search window with item list and rack details">
+      <div class="caption">Search window: type a name, pick an item, see every rack that stores it with distance and coordinates.</div>
+      <img src="screenshot-rack.png" alt="Rack window with green slot frames">
+      <div class="caption">Open the rack: slots that hold the item are framed in green.</div>
+      <img src="screenshot-highlight.png" alt="In-game through-wall highlight of a rack with the item">
+      <div class="caption">In the world: the nearest matching rack is outlined through the wall, with a distance label and a HUD entry.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Install</h2>
+    <p class="sub">Forge 1.20.1 client. MineColonies is optional — without it the mod simply finds nothing.</p>
+<ol class="install">
+      <li>Download <code>rackfinder-1.20.1-&lt;version&gt;.jar</code> from
+        <a href="https://github.com/Redd1ssKA/minecolonies-rackfinder/releases/latest">Releases</a>.</li>
+      <li>Put it into your <code>mods/</code> folder (Forge 1.20.1, client only).</li>
+      <li>Start the game and press <code>R</code>.</li>
+    </ol>
+    <p class="caption">Key already taken? Options → Controls → Key Binds → Rack Finder.</p>
+  </section>
+
+  <section>
+    <h2>Commands &amp; config</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Client commands</h3>
+        <table>
+          <tr><td><code>/rackfinder open</code></td><td>open the window</td></tr>
+          <tr><td><code>/rackfinder target</code></td><td>item used for slot frames</td></tr>
+          <tr><td><code>/rackfinder dump</code></td><td>index stats + top items in chat</td></tr>
+          <tr><td><code>/rackfinder rescan</code></td><td>rescan loaded chunks</td></tr>
+          <tr><td><code>/rackfinder save</code></td><td>write the index now</td></tr>
+          <tr><td><code>/rackfinder clear</code></td><td>wipe the index</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Config (<code>rackfinder-client.toml</code>)</h3>
+        <table>
+          <tr><td><code>scan.radiusChunks</code></td><td>8</td></tr>
+          <tr><td><code>scan.fullRefreshSeconds</code></td><td>120</td></tr>
+          <tr><td><code>highlight.maxHighlights</code></td><td>128</td></tr>
+          <tr><td><code>highlight.hudList</code></td><td>true</td></tr>
+          <tr><td><code>inventory.slotHighlight</code></td><td>true</td></tr>
+          <tr><td><code>storage.autoSaveSeconds</code></td><td>30</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Limitations</h2>
+    <ul class="limits">
+      <li>MineColonies racks are indexed automatically from loaded chunks; vanilla containers only after you open them once. Ender chests and container minecarts are not supported.</li>
+      <li>Containers in unloaded chunks use the last saved snapshot.</li>
+      <li>Contents may be stale if a chunk stayed loaded while colonists moved items; press <em>Rescan</em> or open that rack.</li>
+      <li>A double rack is two blocks and therefore appears twice (they are two real blocks).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Build from source</h2>
+<pre><code>git clone https://github.com/Redd1ssKA/minecolonies-rackfinder.git
+cd minecolonies-rackfinder
+export JAVA_HOME=/path/to/jdk17
+./gradlew build        # build/libs/rackfinder-1.20.1-&lt;version&gt;.jar
+./gradlew runServer    # headless self-test of the NBT parser, index, search, persistence</code></pre>
+  </section>
+
+  <footer>
+    <p><strong>MineColonies Rack Finder</strong> © Redd1ssKA · <a href="https://github.com/Redd1ssKA/minecolonies-rackfinder/blob/main/LICENSE">MIT</a></p>
+    <p>Unofficial addon for <a href="https://github.com/ldtteam/minecolonies">MineColonies</a>. Not affiliated with or endorsed by ldtteam. Minecraft is a trademark of Mojang Studios.</p>
+  </footer>
+
+</main>
+</body>
+</html>

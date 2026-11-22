@@ -1,0 +1,37 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+
+[[mods]]
+modId="rackfinder"
+version="1.0.0"
+displayName="Rack Finder"
+authors="Redd1ssKA"
+description='''Client-side search for items stored in MineColonies racks and vanilla containers.
+Racks are indexed from loaded chunks automatically; chests, barrels, shulkers and other containers
+are remembered once you open them. Results are highlighted through walls. No server side installation.'''
+logoFile="icon.png"
+displayURL="https://redd1sska.github.io/minecolonies-rackfinder/"
+issueTrackerURL="https://github.com/Redd1ssKA/minecolonies-rackfinder/issues"
+displayTest="IGNORE_ALL_VERSION"
+
+[[dependencies.rackfinder]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.rackfinder]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.rackfinder]]
+modId="minecolonies"
+mandatory=false
+versionRange="*"
+ordering="AFTER"
+side="CLIENT"

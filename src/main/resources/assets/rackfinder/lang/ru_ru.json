@@ -1,0 +1,22 @@
+{
+  "key.categories.rackfinder": "Rack Finder",
+  "key.rackfinder.open": "Поиск по стойкам",
+  "rackfinder.gui.title": "Rack Finder — стойки MineColonies",
+  "rackfinder.gui.search": "Название предмета...",
+  "rackfinder.gui.status": "Стоек: %s (с данными: %s) · предметов: %s",
+  "rackfinder.gui.racks": "стоек: %s",
+  "rackfinder.gui.total": "Всего: %s в %s стойках",
+  "rackfinder.gui.warehouse": "склад",
+  "rackfinder.gui.double": "двойная",
+  "rackfinder.gui.noSelection": "Выбери предмет слева",
+  "rackfinder.gui.howItWorks": "Содержимое стоек берётся из уже загруженных клиентом чанков. Чтобы обновить данные, открой стойку или пройдись по колонии.",
+  "rackfinder.gui.otherDimension": "другой мир",
+  "rackfinder.gui.more": "...и ещё %s стоек",
+  "rackfinder.gui.rescan": "Обновить",
+  "rackfinder.gui.clear": "Сбросить подсветку",
+  "rackfinder.gui.close": "Закрыть",
+  "rackfinder.chat.indexed": "Rack Finder: проиндексировано стоек — %s, с данными — %s, типов предметов — %s. Нажми R для поиска.",
+  "rackfinder.chat.rescan": "Rack Finder: пересканирую загруженные чанки...",
+  "rackfinder.gui.clickHint": "Клик по стойке — подсветить только её",
+  "rackfinder.gui.range": "%s–%s из %s"
+}
